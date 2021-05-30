@@ -83,9 +83,9 @@ class VGG16(nn.Module):
         return F.log_softmax(x,dim=1)
         
         
-class VGG16(nn.Module):
+class VGG16Light(pl.LightningModule):
     def __init__(self, classes=10):
-        super(VGG16, self).__init__()
+        super(VGG16Light, self).__init__()
         self.conv1 = ConvBlock(3, 64, 3, 1, 2)
         self.conv2 = ConvBlock(64, 64, 3, 1, 2)
         self.pool1 = nn.MaxPool2d(kernel_size=2, stride=2, ceil_mode=True)
