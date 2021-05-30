@@ -7,6 +7,7 @@ from torch.utils.data import DataLoader, TensorDataset
 import numpy as np
 import matplotlib.pyplot as plt
 import torch.nn.functional as F
+from torchvision.datasets import CIFAR10
 import pytorch_lightning as pl
 from pytorch_lightning.metrics.functional import accuracy
 from pl_bolts.datasets import DummyDataset
