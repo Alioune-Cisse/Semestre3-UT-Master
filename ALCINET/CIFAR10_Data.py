@@ -1,17 +1,13 @@
+import os
 import torch
-import torch.nn as nn
-import torchvision
-from torchsummary import summary
-from torchvision import transforms
-from torch.utils.data import DataLoader, TensorDataset
-import numpy as np
-import matplotlib.pyplot as plt
-import torch.nn.functional as F
+from torch import nn
+from torch.nn import functional as F
+from torch.utils.data import DataLoader, random_split
 from torchvision.datasets import CIFAR10
+from torchvision import transforms
 import pytorch_lightning as pl
 from pytorch_lightning.metrics.functional import accuracy
 from pl_bolts.datasets import DummyDataset
-#%matplotlib inline
 
 class CIFARDataModule(pl.LightningDataModule):
 
