@@ -116,8 +116,8 @@ class GoogLeNet(nn.Module):
         
         
 class GoogLeNetLight(pl.LightningModule):
-    def __init__(self):
-        super(GoogLeNetlight, self).__init__()
+    def __init__(self, classes=10):
+        super(GoogLeNetLight, self).__init__()
       
         self.conv1 = ConvBlock(3, 64, kernel_size=7, stride=2, padding=3)
         self.pool1 = nn.MaxPool2d(3, stride=2, padding=0, ceil_mode=True)
@@ -137,7 +137,7 @@ class GoogLeNetLight(pl.LightningModule):
         self.inception5B = InceptionModule(in_channels=832,f_1x1=384,f_3x3_r=192,f_3x3=384,f_5x5_r=48,f_5x5=128,f_pp=128)
         self.pool6 = nn.AdaptiveAvgPool2d((1,1))
         self.dropout = nn.Dropout(0.4)
-        self.fc = nn.Linear(1024, 10)
+        self.fc = nn.Linear(1024, classes)
 
     def forward(self, x):
         x = self.conv1(x)
