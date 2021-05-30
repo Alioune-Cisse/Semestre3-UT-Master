@@ -1,0 +1,1 @@
+import ALCINET.AlexNet, ALCINET.GoogleNet, ALCINET.ResNet50, ALCINET.VGG16, ALCINET.TrainModel, ALCINET.BoussoNet
