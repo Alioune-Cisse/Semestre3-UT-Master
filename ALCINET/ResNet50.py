@@ -43,7 +43,7 @@ class block_residuel(nn.Module):
         
         
 class ResNet(nn.Module):
-    def __init__(self, block, layers, classes):
+    def __init__(self, block=block_residuel, layers=[3,4,6,3], classes=10):
         super(ResNet, self).__init__()
         self.in_channels = 16
         self.conv = conv3_3(3, 16)
@@ -82,7 +82,7 @@ class ResNet(nn.Module):
         
         
 class ResNetLight(nn.Module):
-    def __init__(self, block, layers, classes):
+    def __init__(self, block=block_residuel, layers=[3,4,6,3], classes=10):
         super(ResNetLight, self).__init__()
         self.in_channels = 16
         self.conv = conv3_3(3, 16)
