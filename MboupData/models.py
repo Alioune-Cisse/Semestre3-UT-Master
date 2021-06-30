@@ -16,13 +16,13 @@ import torch.optim as optim
 
 class LiverModel(pl.LightningModule):
     
-    def __init__(self):
+    def __init__(self, modell = models.vgg16 ):
         super(LiverModel, self).__init__()
         
         # Model  ###############################################################################
         # Pretrained VGG16
         use_pretrained = True
-        self.net = models.vgg16(pretrained=use_pretrained)
+        self.net = modell(pretrained=use_pretrained)
         # Change Output Size of Last FC Layer (4096 -> 1)
         self.net.classifier[6] = nn.Linear(in_features=self.net.classifier[6].in_features, out_features=4)
         # Specify The Layers for updating
@@ -44,7 +44,8 @@ class LiverModel(pl.LightningModule):
     
     
     def forward(self, x):
-        return self.net(x)
+        x = self.net(x)
+        return F.log_softmax(x,dim=1)
 
     def crossentropy_loss(self, logits, labels):
         return F.nll_loss(logits, labels)
