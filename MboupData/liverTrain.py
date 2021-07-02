@@ -90,3 +90,4 @@ class TrainModel():
                   Test_loss : {test_losses[-1]},
                   Test_accuracy : {val_accuracies[-1]}""")
       self.visualiser_tensorboard(train_losses, test_losses, train_accuracies, val_accuracies)
+      return Training_loss, Train_accuracy, Test_loss, Test_accuracy
