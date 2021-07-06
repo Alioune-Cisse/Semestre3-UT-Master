@@ -16,8 +16,10 @@ import torch.optim as optim
 
 class LiverModel(pl.LightningModule):
     
-    def __init__(self, modell = models.vgg16 ):
+    def __init__(self, modell = models.vgg16, lr=0.0001 ):
         super(LiverModel, self).__init__()
+        
+        self.lr = lr
         
         # Model  ###############################################################################
         # Pretrained VGG16
@@ -36,7 +38,7 @@ class LiverModel(pl.LightningModule):
             else:
                 param.requires_grad = False
         # Set Optimizer
-        self.optimizer = optim.SGD(params=params_to_update, lr=0.001, momentum=0.9)
+        self.optimizer = optim.SGD(params=params_to_update, lr=self.lr, momentum=0.9)
     
     # Method  ###############################################################################
     # Set Train Dataloader
@@ -72,7 +74,7 @@ class LiverModel(pl.LightningModule):
         return loss
 
     def configure_optimizers(self):
-        optimizer = torch.optim.Adam(self.parameters(), lr=1e-3)
+        optimizer = torch.optim.Adam(self.parameters(), lr=self.lr)
         #generator_optim = torch.optim.Adam(self.generator(), lr=1e-3)
         #disc_optim = torch.optim.Adam(self.discriminator(), lr=1e-3)
         return optimizer
