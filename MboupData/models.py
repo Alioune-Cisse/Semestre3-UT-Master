@@ -12,9 +12,15 @@ import torch.nn.functional as F
 import pytorch_lightning as pl
 import torch.optim as optim
 import MboupData.dataset as dataset
+import MboupData.transform as transform
 import sys
+
+
 sys.path.append('/content/Semestre3_MSDA')
 path = '/content/IMAGES_ECHO_LABELLISEES/'
+transforms = transform.TransformData()
+data = dataset.LiverDataset(path, transform=transforms())
+train_dl = data.train_dataloader(batch_size=10, shuffle=False)
 
 
 
@@ -53,9 +59,8 @@ class LiverModel(pl.LightningModule):
         x = self.net(x)
         return F.log_softmax(x,dim=1)
     
-    def train_dataloader(self):
-        data = dataset.LiverDataset(path, transform=transforms())
-        train_dl = data.train_dataloader(batch_size=10, shuffle=False)
+    def train_dataloader(self, train_dl=train_dl):
+        
         return train_dl
     
     def test_dataloader(self):
