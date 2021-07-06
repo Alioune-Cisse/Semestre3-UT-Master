@@ -26,10 +26,10 @@ hparams = {'lr':[0.0001, 0.0003, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3]}
 
 class LiverModel(pl.LightningModule):
     
-    def __init__(self, modell = models.vgg16):
+    def __init__(self, modell = models.vgg16, lr=0.0001):
         super(LiverModel, self).__init__()
      
-        self.lr=0.0001
+        self.lr=lr
         
         # Model  ###############################################################################
         # Pretrained VGG16
