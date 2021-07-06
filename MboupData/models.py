@@ -22,16 +22,15 @@ transforms = transform.TransformData()
 data = dataset.LiverDataset(path, transform=transforms())
 train_dl = data.train_dataloader(batch_size=10, shuffle=False)
 
-hparams = dict()
+hparams = {'lr':[0.0001, 0.0003, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3]}
 
 class LiverModel(pl.LightningModule):
     
-    def __init__(self, modell = models.vgg16, lr=0.0001, set, hparams_=hparams):
+    def __init__(self, modell = models.vgg16,  hparams_=hparams):
         super(LiverModel, self).__init__()
-        
-        self.lr = lr
-        self.set = set
+     
         self.hparams = hparams_
+        self.lr = self.hparams['lr'][0]
         
         # Model  ###############################################################################
         # Pretrained VGG16
