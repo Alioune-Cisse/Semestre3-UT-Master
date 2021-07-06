@@ -22,11 +22,11 @@ transforms = transform.TransformData()
 data = dataset.LiverDataset(path, transform=transforms())
 train_dl = data.train_dataloader(batch_size=10, shuffle=False)
 
-
+hparams = dict()
 
 class LiverModel(pl.LightningModule):
     
-    def __init__(self, modell = models.vgg16, lr=0.0001, hparams_={}):
+    def __init__(self, modell = models.vgg16, lr=0.0001, hparams_=hparams):
         super(LiverModel, self).__init__()
         
         self.lr = lr
