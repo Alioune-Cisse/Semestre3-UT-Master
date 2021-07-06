@@ -54,9 +54,9 @@ class LiverModel(pl.LightningModule):
     # Set Train Dataloader
     #@pl.data_loader
     
-    def hparams(self, hparams=hparams):
+    """def hparams(self, hparams=hparams):
         self.hparams = hparams
-        return self.hparams
+        return self.hparams"""
     
     def forward(self, x):
         x = self.net(x)
