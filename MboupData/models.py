@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 import torch.nn.functional as F
 import pytorch_lightning as pl
 import torch.optim as optim
+import MboupData.dataset as dataset
 
 
 
@@ -48,6 +49,16 @@ class LiverModel(pl.LightningModule):
     def forward(self, x):
         x = self.net(x)
         return F.log_softmax(x,dim=1)
+    
+    def train_dataloader(self):
+        data = dataset.LiverDataset(path, transform=transforms())
+        train_dl = data.train_dataloader(batch_size=10, shuffle=False)
+        return train_dl
+    
+    def test_dataloader(self):
+        data = dataset.LiverDataset(path, transform=transforms())
+        train_dl = data.test_dataloader(batch_size=10, shuffle=False)
+        return train_dl
 
     def crossentropy_loss(self, logits, labels):
         return F.nll_loss(logits, labels)
