@@ -33,7 +33,7 @@ class LiverModel(pl.LightningModule):
         
         # Model  ###############################################################################
         # Pretrained VGG16
-        use_pretrained = True
+        use_pretrained = False
         self.net = modell(pretrained=use_pretrained)
         # Change Output Size of Last FC Layer (4096 -> 1)
         self.net.classifier[6] = nn.Linear(in_features=self.net.classifier[6].in_features, out_features=4)
