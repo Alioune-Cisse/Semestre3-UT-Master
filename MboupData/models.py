@@ -26,10 +26,11 @@ hparams = dict()
 
 class LiverModel(pl.LightningModule):
     
-    def __init__(self, modell = models.vgg16, lr=0.0001, hparams_=hparams):
+    def __init__(self, modell = models.vgg16, lr=0.0001, set, hparams_=hparams):
         super(LiverModel, self).__init__()
         
         self.lr = lr
+        self.set = set
         self.hparams = hparams_
         
         # Model  ###############################################################################
