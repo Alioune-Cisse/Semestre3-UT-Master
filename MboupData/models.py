@@ -26,11 +26,10 @@ hparams = {'lr':[0.0001, 0.0003, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3]}
 
 class LiverModel(pl.LightningModule):
     
-    def __init__(self, modell = models.vgg16,  hparams_=hparams):
+    def __init__(self, modell = models.vgg16):
         super(LiverModel, self).__init__()
      
-        self.hparams = hparams_
-        self.lr = self.hparams['lr'][0]
+        self.lr=0.0001
         
         # Model  ###############################################################################
         # Pretrained VGG16
@@ -55,6 +54,9 @@ class LiverModel(pl.LightningModule):
     # Set Train Dataloader
     #@pl.data_loader
     
+    def hparams(self, hparams=hparams):
+        self.hparams = hparams
+        return self.hparams
     
     def forward(self, x):
         x = self.net(x)
