@@ -12,6 +12,9 @@ import torch.nn.functional as F
 import pytorch_lightning as pl
 import torch.optim as optim
 import MboupData.dataset as dataset
+import sys
+sys.path.append('/content/Semestre3_MSDA')
+path = '/content/IMAGES_ECHO_LABELLISEES/'
 
 
 
