@@ -26,10 +26,11 @@ train_dl = data.train_dataloader(batch_size=10, shuffle=False)
 
 class LiverModel(pl.LightningModule):
     
-    def __init__(self, modell = models.vgg16, lr=0.0001 ):
+    def __init__(self, modell = models.vgg16, lr=0.0001, hparams = {'lr':[0.0001, 0.0003, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3], "loss":[]} ):
         super(LiverModel, self).__init__()
         
         self.lr = lr
+        self.hparams = hparams
         
         # Model  ###############################################################################
         # Pretrained VGG16
