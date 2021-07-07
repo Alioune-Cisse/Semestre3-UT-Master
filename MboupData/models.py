@@ -63,13 +63,17 @@ class LiverModel(pl.LightningModule):
         return F.log_softmax(x,dim=1)
     
     def train_dataloader(self, train_dl=train_dl):
-        
         return train_dl
+    
+    def val_dataloader(self):
+        data = dataset.LiverDataset(path, transform=transforms())
+        val_dl = data.val_dataloader(batch_size=10, shuffle=False)
+        return val_dl
     
     def test_dataloader(self):
         data = dataset.LiverDataset(path, transform=transforms())
-        train_dl = data.test_dataloader(batch_size=10, shuffle=False)
-        return train_dl
+        test_dl = data.test_dataloader(batch_size=10, shuffle=False)
+        return test_dl
 
     def crossentropy_loss(self, logits, labels):
         return F.nll_loss(logits, labels)
