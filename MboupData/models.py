@@ -36,7 +36,7 @@ class LiverModel(pl.LightningModule):
         use_pretrained = False
         self.net = modell(pretrained=use_pretrained)
         # Change Output Size of Last FC Layer (4096 -> 1)
-        self.net.classifier[6] = nn.Linear(in_features=self.net.classifier[6].in_features, out_features=4)
+        self.net.classifier[6] = nn.Linear(in_features=self.net.classifier[6].in_features, out_features=3)
         # Specify The Layers for updating
         params_to_update = []
         update_params_name = ['classifier.6.weight', 'classifier.6.bias']
