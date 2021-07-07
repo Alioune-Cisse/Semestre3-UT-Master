@@ -24,7 +24,7 @@ class LiverDataset():
     
     def val_dataloader(self, batch_size=64, shuffle=True):
         _, val, _ = self.setup()
-        return DataLoader(train, batch_size=batch_size, shuffle=shuffle)
+        return DataLoader(val, batch_size=batch_size, shuffle=shuffle)
 
     def test_dataloader(self, batch_size=64, shuffle=True):
         _, _, test = self.setup()
