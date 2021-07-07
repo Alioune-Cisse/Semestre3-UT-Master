@@ -15,16 +15,20 @@ class LiverDataset():
       return len(self.dataset)
 
     def setup(self):
-        self.train, self.test = train_test_split(self.dataset, train_size = 100)
-        return self.train, self.test
-
+        self.train, self.test = train_test_split(self.dataset, train_size = 0.8)
+        self.train, self.val = train_test_split(self.train, train_size = 0.8)
+        return self.train, self.val, self.test
     def train_dataloader(self, batch_size=64, shuffle=True):
-        train, _ = self.setup()
+        train, _, _ = self.setup()
+        return DataLoader(train, batch_size=batch_size, shuffle=shuffle)
+    
+    def val_dataloader(self, batch_size=64, shuffle=True):
+        _, val, _ = self.setup()
         return DataLoader(train, batch_size=batch_size, shuffle=shuffle)
 
     def test_dataloader(self, batch_size=64, shuffle=True):
-        _, test = self.setup()
+        _, _, test = self.setup()
         return DataLoader(test, batch_size=batch_size, shuffle=shuffle)
 
     def dataset(self):
-        return self.train_dataloader(),  self.test_dataloader()
+        return self.train_dataloader(), self.val_dataloader(),  self.test_dataloader()
