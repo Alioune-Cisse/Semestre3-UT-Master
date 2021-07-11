@@ -57,6 +57,12 @@ class LiverModel(pl.LightningModule):
     """def hparams(self, hparams=hparams):
         self.hparams = hparams
         return self.hparams"""
+    @staticmethod
+    def add_model_specific_args(parent_parser):
+       parser = parent_parser.add_argument_group("LitModel")
+       parser.add_argument('--encoder_layers', type=int, default=12)
+       parser.add_argument('--data_path', type=str, default='/some/path')
+       return parent_parser
     
     def forward(self, x):
         x = self.net(x)
