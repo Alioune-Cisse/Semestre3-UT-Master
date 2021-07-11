@@ -26,7 +26,7 @@ hparams = {'lr':[0.0001, 0.0003, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3]}
 
 class LiverModel(pl.LightningModule):
     
-    def __init__(self, modell = models.vgg16, lr=0.0001, encoder_layers, **kwargs):
+    def __init__(self, lr, encoder_layers, **kwargs):
         super().__init__()
         self.encoder = Encoder(layers=encoder_layers)
      
@@ -35,7 +35,7 @@ class LiverModel(pl.LightningModule):
         # Model  ###############################################################################
         # Pretrained VGG16
         use_pretrained = False
-        self.net = modell(pretrained=use_pretrained)
+        self.net = models.vgg16(pretrained=use_pretrained)
         # Change Output Size of Last FC Layer (4096 -> 1)
         self.net.classifier[6] = nn.Linear(in_features=self.net.classifier[6].in_features, out_features=3)
         # Specify The Layers for updating
