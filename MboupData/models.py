@@ -26,9 +26,9 @@ hparams = {'lr':[0.0001, 0.0003, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3]}
 
 class LiverModel(pl.LightningModule):
     
-    def __init__(self, lr, encoder_layers, **kwargs):
+    def __init__(self, lr, **kwargs):
         super().__init__()
-        self.encoder = Encoder(layers=encoder_layers)
+        #self.encoder = Encoder(layers=encoder_layers)
      
         self.lr=lr
         
@@ -63,6 +63,7 @@ class LiverModel(pl.LightningModule):
     def add_model_specific_args(parent_parser):
         parser = parent_parser.add_argument_group("LiverModel")
         parser.add_argument('--encoder_layers', type=int, default=12)
+        parser.add_argument('--data_path', type=str, default='/content')
         return parent_parser
     
     def forward(self, x):
