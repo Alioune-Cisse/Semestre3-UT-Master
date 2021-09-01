@@ -1,0 +1,318 @@
+---
+title: "Exercice 1"
+author: "Alioune CISSE"
+date: "29/08/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## NB : Codes puis Commentaires en dessous
+# *Question 1: *
+
+```{r}
+library(e1071)
+```
+
+#### Cette ligne de code permet de charger le package e1071
+
+```{r cars}
+data(HouseVotes84, package = "mlbench")
+```
+#### cette ligne permet de Charger les données de HouseVotes64 qui se trouvent dans le package mlbench
+
+```{r}
+help(HouseVotes84,package = "mlbench")
+```
+#### Documentation concernant les données de HouseVotes64
+
+```{r}
+g <- naiveBayes(Class ~ ., data = HouseVotes84)
+```
+#### Appeler la méthode du Bayesien naïf du package e1071 de R
+
+```{r}
+g$apriori
+```
+#### Lister la répartition de la variable de data à expliquer dans g (colonne Class)
+
+```{r}
+g$tables
+
+```
+#### Détermine les probabilités d'obtenir une des valeurs de la variable endogène en fonction de chaque variable explicative
+
+```{r}
+predict(g, HouseVotes84[1,])
+```
+#### Retourne la valeur prédite de la colonne "Class" pour le premier élément du dataframe
+
+```{r}
+predict(g, HouseVotes84[1,], type = "raw")
+```
+#### Retourne les probabilités prédites d'avoir chaque valeur de "Class" pour le premier élément du dataframe
+
+```{r}
+pred <- predict(g, HouseVotes84)
+```
+#### Faire une prédiction sur les données HouseVotes84 en fonction du modèle bayesien naïf
+
+```{r}
+table(pred, HouseVotes84$Class)
+```
+#### Retourner la matrice de confusion en tre les valeurs de Class prédites et les valeurs réelles
+
+# Données d'entrée quantitatives
+
+```{r}
+data(iris)
+```
+#### Charger les données de la fleur d'iris
+
+```{r}
+g <- naiveBayes(Species ~ ., data = iris)
+```
+#### Faire le modèle bayesien naïf
+
+```{r}
+g$apriori
+```
+#### Lister la répartition de la variable de data à expliquer dans g (colonne Species)
+
+```{r}
+g$tables
+
+```
+#### Détermine les probabilités d'obtenir une des valeurs de la variable endogène en fonction de chaque variable explicative
+
+```{r}
+table(predict(g, iris), iris[,5])
+```
+#### Faire la prédiction et Retourner la matrice de confusion entre la pr&édiction et la valeur réelle
+
+```{r}
+library(klaR)
+```
+#### Charger la librairie klaR
+
+```{r}
+?NaiveBayes
+```
+#### Chercher des informations sur la méthode NaiveBayes du package klaR
+
+```{r}
+m <- NaiveBayes(Species ~ ., data = iris)
+```
+#### Appeler la méthode du Bayesien naïf du package klaR
+
+```{r}
+names(predict(m))
+```
+#### Retourner le nom des éléments de predict(m)
+
+```{r}
+table(predict(m)$class, iris[,5])
+```
+#### Matrice de confusion
+
+```{r}
+m2 <- NaiveBayes(Species ~ ., data = iris, usekernel=TRUE)
+names(predict(m2))
+table(predict(m2)$class, iris[,5])
+
+```
+#### La même chose que précédent sauf qu'ici on utilise le noyau dans NaïveBayes (On utilise une estimation de densité de noyau)
+
+# *Question 2: *
+## ---------------------------------------Naive Bayes----------------------------------
+```{r}
+Dbois <- get(load("C:/Users/lenovo/Dropbox/Mon PC (DESKTOP-6CHTUR2)/Desktop/MSDA Semestre3/PGM/TP1/Desbois_complet.rda"))
+```
+#### Charger les données de Desbois
+
+```{r}
+library(caTools)
+```
+#### Charger la librairie caTools pour spliter les données en train & test
+
+```{r}
+sample <- sample.int(n = nrow(Dbois), size = floor(.75*nrow(Dbois)), replace = F)
+train <- data[sample, ]
+test  <- data[-sample, ]
+```
+#### Diviser le dataset et allouer 75% au train et le reste au test
+
+```{r}
+g <- naiveBayes(DIFF ~ ., data = train)
+```
+#### Appeler la méthode du Bayesien naïf du package e1071 de R
+
+```{r}
+g$apriori
+```
+#### Lister la répartition de la variable de data à expliquer dans g (colonne Class)
+
+```{r}
+g$tables
+
+```
+#### Détermine les probabilités d'obtenir une des valeurs de la variable endogène en fonction de chaque variable explicative
+
+```{r}
+predict(g, train[1,])
+```
+#### Prédit la valeur de la colonne "DIFF" pour le premier élément du dataframe
+
+```{r}
+predict(g, train[1,], type = "raw")
+```
+#### Donne les probabilités d'avoir chaque valeur de Class
+
+```{r}
+pred <- predict(g, test)
+```
+#### Faire une prédiction sur les données Desbois en fonction du modèle bayesien naïf
+
+```{r}
+matrix <- table(pred, test$DIFF)
+print(matrix)
+```
+#### Matrice de confusion
+
+```{r}
+erreur <- 1 - sum(diag(matrix)) / sum(matrix)
+print(erreur)
+```
+#### Calculer l'erreur de prédiction
+
+## ---------------------------------------LDA----------------------------------
+```{r}
+g2 <- lda(DIFF ~ ., data = train)
+```
+#### Appeler la méthode lda
+
+```{r}
+g2$counts
+```
+#### Lister la répartition de la variable de data à expliquer dans g (colonne Class)
+
+```{r}
+g2$prior
+```
+#### Détermine les probabilités d'obtenir chacune des valeurs de la variable endogène
+
+```{r}
+predict(g2, train[1,])
+```
+#### Prédit la valeur de la colonne "DIFF" pour le premier élément du dataframe et retourne la valeur prédite les proba conditionnelles à posteriori et une valeur LDA
+
+```{r}
+predict(g2, train[1,], type = "raw")
+```
+#### Fais la même chose que la ligne précédente contrairement aux naives bayes
+
+```{r}
+pred <- predict(g2, test)
+```
+#Faire une prédiction sur les données Desbois en fonction du modèle lda
+
+```{r}
+matrix <- table(pred$class, test$DIFF)
+print(matrix)
+```
+#### Matrice de confusion
+
+```{r}
+erreur <- 1 - sum(diag(matrix)) / sum(matrix)
+print(erreur)
+```
+#### Erreur
+
+## ---------------------------------------QDA----------------------------------
+```{r}
+g3 <- qda(DIFF ~ ., data = train)
+```
+#### Appeler la méthode lda
+
+```{r}
+g3$counts
+```
+#### Lister la répartition de la variable de data à expliquer dans g (colonne Class)
+
+```{r}
+g3$prior
+
+```
+#### Détermine les probabilités d'obtenir chacune des valeurs de la variable endogène
+
+```{r}
+predict(g3, train[1,])
+
+```
+#### Prédit la valeur de la colonne "DIFF" pour le premier élément du dataframe et retourne la valeur prédite les proba conditionnelles à posteriori et une valeur LDA
+
+```{r}
+predict(g3, train[1,], type = "raw")
+```
+#Fais la même chose que la ligne précédente contrairement aux naives bayes
+
+```{r}
+pred <- predict(g3, test)
+```
+#### Faire une prédiction sur les données Desbois en fonction du modèle lda
+
+```{r}
+matrix <- table(pred$class, test$DIFF)
+print(matrix)
+```
+#### Matrice de confusion
+
+```{r}
+erreur <- 1 - sum(diag(matrix)) / sum(matrix)
+print(erreur)
+```
+#### Déterminer l'erreur de classification
+
+
+# *Conclusion*
+Parmi les 3 méthodes (Naives Bayes, LDA et QDA), Naives Bayes nous donne l'erreur la plus petite dans notre cas.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
