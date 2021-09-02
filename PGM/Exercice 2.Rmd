@@ -1,0 +1,182 @@
+---
+title: "Exercice 2"
+author: "Alioune CISSE"
+date: "30/08/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+On a :
+
+$$
+\begin{equation}
+\forall x \in \mathbb{R}^{2}, \forall k \in\{1,2\} \quad f_{k}(x)=f_{k, 1}\left(x_{1}\right) f_{k, 2}\left(x_{2}\right)
+\end{equation}
+$$
+On a également :
+$$
+X^{j}\ sachant\ \{Y = K\} \sim \mathcal{N}(\mu_{kj},\,\sigma^{2}_{kj}) \rightarrow f_{k,j}(xj) = \frac{1}{\sigma_{kj}\sqrt{2\pi}}\exp({-\frac{1}{2}(\frac{x_j - \mu_{k_j}}{\sigma_{kj}})})
+$$
+
+## 1. Les estimateurs du maximum de vraisemblance de tous les paramètres du bayésien naïf considéré :
+
+$$
+\begin{equation}
+\begin{split}
+L(x_1, x_2, ..., x_n, \mu_k, \sigma_k) & = \prod_{i=1}^{n}
+[\frac{1}{\sigma_{kj}\sqrt{2\pi}}\exp({-\frac{1}{2}(\frac{x_j - \mu_{k_j}}{\sigma_{kj}})})\\
+& = (\frac{1}{\sigma_{kj}\sqrt{2\pi}})^n\exp^{({-\frac{1}{2\sigma_{kj}}\sum{(xj - \mu_{kj})^2}})} \\
+& = (\frac{1}{2\pi\sigma^2_{kj}})^\frac{n}{2}\exp^{({-\frac{1}{2\sigma_{kj}}\sum{(xj - \mu_{kj})^2}})}
+\end{split}
+\end{equation}
+$$
+Son logarithme est : 
+
+
+\begin{equation}
+\begin{split}
+
+\log(L(x_1, x_2, ..., x_n, \lambda))  & = \log(\frac{1}{2\pi\sigma_{kj}^2})^{\frac{n}{2}}  - {\frac{1}{2\sigma_{kj}}\sum{(xj - \mu_{kj})^2}} \\
+& = -\frac{n}{2}\log{2\pi}-\frac{n}{2}\log\sigma^2_{kj} - {\frac{1}{2\sigma_{kj}}\sum{(xj - \mu_{kj})^2}} 
+
+\end{split}
+\end{equation}
+
+
+Les dérivées partielles par rapport à $\mu$ et $\sigma$ sont : 
+
+$$
+\frac{\partial \log \left(L\left(x_{1}, \ldots, x_{n}, \lambda\right)\right)}{\partial \mu}=\frac{1}{\sigma_{kj}} \sum\left(x_{i}-\mu_{kj} \right) \\
+$$
+$$
+\frac{\partial \log \left(L\left(x_{1}, \ldots, x_{n}, \lambda\right)\right)}{\partial \sigma_{kj} }=-\frac{n}{2 \sigma_{kj} }+\frac{1}{2 \sigma_{kj}^{2}} \sum\left(x_{i}-\mu_{kj}\right)^{2}
+$$
+En annulant les dérivées partielles, nous obtenons : 
+$$
+\sum\left(x_{i}-\mu_{kj} \right) = 0 \rightarrow \sum x_i = n\mu_{kj} \rightarrow \hat{\mu}_{kj} = \frac{\sum x_i}{n}
+$$
+$$
+\frac{n}{2\sigma_{kj}} = \frac{\sum(x_i - \mu_{kj})^2}{2\sigma^2_{kj}} \rightarrow \hat{\sigma}_{kj} = \frac{\sum(x_i - \mu_{kj})^2}{n}
+$$
+En calculant les dérivées partielles secondes, nous obtenons :
+
+$$
+\frac{\partial^{2} \log \left(L\left(x_{1}, \ldots, x_{n}, \lambda\right)\right)}{\partial \mu^{2}}=-\frac{n}{\sigma_{kj}}
+$$
+
+
+$$
+\frac{\partial^{2} \log \left(L\left(x_{1}, \ldots, x_{n}, \lambda\right)\right)}{\partial \sigma^{2}}=-\frac{n}{2 \sigma^{2}}-\frac{1}{\sigma^{3}} \sum\left(x_{i}-\mu\right)^{2}
+$$
+
+Elles sont strictement négatives, donc $\hat{\mu}$ et $\hat{\sigma}$ correspondent aux paramètres recherchés.
+
+
+## 3.a Charger le jeu de données dans R.
+```{r}
+path <- "C:/Users/lenovo/Dropbox/Mon PC (DESKTOP-6CHTUR2)/Desktop/MSDA Semestre3/PGM/TP1/synth_train.txt"
+trainset <- read.table(path,header = TRUE)
+trainset[1:5,]
+```
+### b. Transformation de la variable de sortie y en facteur
+```{r}
+trainset$y <- as.vector(trainset$y)
+```
+
+
+## 4. Implémentation de la méthode bayésien naif
+### a. Fonction bn_estim : Retourner les paramètres associés à la modélisation
+```{r}
+bn_estim <- function(data){
+  
+  ## X1 sachant {Y=1}
+  mu_11 <- mean(data[data$y==1, "x1"])
+  std_11 <- sd(data[data$y==1, "x1"])
+  ## X2 sachant {Y=1}
+  mu_12 <- mean(data[data$y==1, "x2"])
+  std_12 <- sd(data[data$y==1, "x2"])
+  
+  ## X1 sachant {Y=2}
+  mu_21 <- mean(data[data$y==2, "x1"])
+  std_21 <- sd(data[data$y==2, "x1"])
+  ## X2 sachant {Y=2}
+  mu_22 <- mean(data[data$y==2, "x2"])
+  std_22 <- sd(data[data$y==2, "x2"])
+  
+  return(c(mu_11, std_11, mu_12, std_12, mu_21, std_21, mu_22, std_22))
+}
+```
+### b. Fonction bn_predict : prédit la classe associée à une observation x
+On a $\forall x \in \mathbb{R}^{2}, \forall k \in\{1,2\}; \quad f_{k}(x)=f_{k, 1}\left(x_{1}\right) f_{k, 2}\left(x_{2}\right)$ et $f_{k,j}(x)=\frac{1}{\sigma_{k j} \sqrt{2 \pi}} \exp \left(-\frac{1}{2}\left(\frac{x-\mu_{k_{j}}}{\sigma_{kj}}\right)\right)\\$
+
+$P_p(Y=k) = f_k(x) = f_{k, 1}\left(x_{1}\right) f_{k, 2}\left(x_{2}\right)$
+
+```{r}
+bn_predict<- function(data, test){
+  params <-  bn_estim(data) #Recup mu_11, std_11, mu_12, std_12, mu_21, std_21, mu_22, std_22
+  ypred <- 0
+  for (i in 1:dim(test)[1]) {
+    x1 <- test$x1[i]
+    x2 <- test$x2[i]
+    f1 <- exp(-(x1-params[1])^2)/sqrt(2*pi*params[2]^2) * exp(-(x2-params[3])^2)/sqrt(2*pi*params[4]^2)
+    f2 <- exp(-(x1-params[5])^2)/sqrt(2*pi*params[6]^2) * exp(-(x2-params[7])^2)/sqrt(2*pi*params[8]^2)
+    if(f1>f2){
+      ypred[i] <- 1
+    }else{
+      ypred[i] <- 2
+    }
+  }
+  ypred
+}
+```
+
+## 5. Tester avec l'échantillon d'apprentissage
+```{r}
+ypred = bn_predict(trainset, trainset)
+print(ypred)
+```
+## b. Tester avec les coordonnées (0, 1) et (-2, 2)
+```{r}
+x1 <- c(0, -2)
+x2 <- c(1, 2)
+val <- data.frame(x1, x2)
+yvalpred = bn_predict(trainset, val)
+```
+```{r}
+print(paste0("Prediction coordonnee (0,1) : ypred = ", yvalpred[1]))
+print(paste0("Prediction coordonnee (-2,2) : ypred = ", yvalpred[2]))
+```
+
+## 6. Taux d'erreur d'apprentissage
+
+```{r}
+matrix <- table(trainset$y, ypred)
+
+erreur <- 1 - sum(diag(matrix)) / sum(matrix)
+print(paste0("Taux d'erreur d'apprentissage : ", format(round(erreur*100, 2), nsmall = 2), "%"))
+```
+
+## 7. Charger le jeu de donnees test
+```{r}
+path <- "C:/Users/lenovo/Dropbox/Mon PC (DESKTOP-6CHTUR2)/Desktop/MSDA Semestre3/PGM/TP1/synth_test.txt"
+test <- read.table(path,header = TRUE)
+test[1:5,]
+```
+## Prediction sur le jeu de test et calcul d'erreur
+```{r}
+#Transformation de y en facteur
+test$y <- as.vector(test$y)
+
+ytestpred = bn_predict(trainset, test)
+matrix <- table(test$y, ytestpred)
+
+erreur <- 1 - sum(diag(matrix)) / sum(matrix)
+print(paste0("Taux d'erreur de test : ", format(round(erreur*100, 2), nsmall = 2), "%"))
+```
+
+
+
