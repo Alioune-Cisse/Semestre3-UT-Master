@@ -1,0 +1,19 @@
+#
+# Install speedtest cli from SpeedTest.net first
+# https://www.speedtest.net/apps/cli
+#
+# And then run speedtest once to accept the license
+#
+
+[[inputs.exec]]
+commands = ["/usr/bin/speedtest --accept-license --accept-gdpr -f json-pretty"]
+name_override = "Speedtest"
+timeout = "1m"
+interval = "15m"
+data_format = "json"
+json_string_fields = [ "interface_externalIp",
+                       "server_name",
+                       "localhost",
+                       "8086",
+                       "10.0.2.15",
+                       "result_url" ]
